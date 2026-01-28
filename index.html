@@ -1,14 +1,85 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Wash Team System</title>
-</head>
-<body>
-  <h1>🚿 Wash Team Dashboard</h1>
-  <p>ระบบบันทึกล้างรถ</p>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
-  <a href="daily.html">📅 บันทึกรายวัน</a><br>
-  <a href="summary.html">📊 สรุปรายสัปดาห์ / เดือน</a>
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 0;
+      background: #f4f6f8;
+    }
+    nav {
+      background: #0f172a;
+      color: white;
+      padding: 12px;
+      display: flex;
+      justify-content: space-around;
+    }
+    nav button {
+      background: none;
+      border: none;
+      color: white;
+      font-size: 16px;
+    }
+    .page {
+      display: none;
+      padding: 20px;
+    }
+    .page.active {
+      display: block;
+    }
+  </style>
+</head>
+
+<body>
+
+<nav>
+  <button onclick="go('daily')">📅 รายวัน</button>
+  <button onclick="go('summary')">📊 สรุป</button>
+  <button onclick="go('dashboard')">📈 Dashboard</button>
+</nav>
+
+<section id="daily" class="page">
+  <h2>บันทึกรายวัน</h2>
+  <p>ฟอร์มกรอกข้อมูลรายวัน</p>
+</section>
+
+<section id="summary" class="page">
+  <h2>สรุปสัปดาห์ / เดือน</h2>
+  <p>สรุปข้อมูลย้อนหลัง</p>
+</section>
+
+<section id="dashboard" class="page">
+  <h2>Dashboard</h2>
+  <p>ภาพรวมธุรกิจ</p>
+</section>
+
+<script>
+  function go(page) {
+    history.pushState({}, "", "/" + page);
+    show(page);
+  }
+
+  function show(page) {
+    document.querySelectorAll(".page")
+      .forEach(p => p.classList.remove("active"));
+    const el = document.getElementById(page);
+    if (el) el.classList.add("active");
+  }
+
+  window.addEventListener("load", () => {
+    const page = location.pathname.replace("/", "") || "daily";
+    show(page);
+  });
+
+  window.addEventListener("popstate", () => {
+    const page = location.pathname.replace("/", "") || "daily";
+    show(page);
+  });
+</script>
+
 </body>
 </html>

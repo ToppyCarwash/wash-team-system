@@ -1,174 +1,192 @@
 <!DOCTYPE html>
 <html lang="th">
-<head><script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Wash Team App</title>
+<head>
+  <meta charset="UTF-8" />
+  <title>Wash Team Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<!-- Google Font -->
-<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap" rel="stylesheet">
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
 
-<style>
-:root {
-  --blue: #2563eb;
-  --blue-light: #dbeafe;
-  --bg: #f1f5f9;
-}
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-* {
-  box-sizing: border-box;
-}
+  <!-- Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap" rel="stylesheet">
 
-body {
-  margin: 0;
-  font-family: 'Kanit', sans-serif;
-  background: linear-gradient(180deg, #eff6ff, #f8fafc);
-  min-height: 100vh;
-}
-
-/* Header */
-header {
-  background: var(--blue);
-  color: white;
-  padding: 18px;
-  text-align: center;
-  font-weight: 600;
-  font-size: 18px;
-  position: sticky;
-  top: 0;
-}
-
-/* Page */
-.page {
-  display: none;
-  padding: 20px;
-  animation: fade 0.3s ease;
-}
-
-.page.active {
-  display: block;
-}
-
-/* Card */
-.card {
-  background: white;
-  border-radius: 20px;
-  padding: 18px;
-  box-shadow: 0 12px 30px rgba(0,0,0,0.1);
-  margin-bottom: 16px;
-}
-
-/* Input */
-input {
-  width: 100%;
-  padding: 14px;
-  border-radius: 14px;
-  border: 1px solid #cbd5f5;
-  margin-top: 6px;
-  font-size: 16px;
-}
-
-/* Button */
-button {
-  width: 100%;
-  padding: 14px;
-  border-radius: 16px;
-  border: none;
-  background: var(--blue);
-  color: white;
-  font-size: 16px;
-  font-weight: 600;
-  margin-top: 12px;
-  transition: transform 0.1s ease, box-shadow 0.1s ease;
-}
-
-button:active {
-  transform: scale(0.97);
-  box-shadow: 0 5px 15px rgba(37,99,235,0.4);
-}
-
-/* Bottom Nav */
-nav {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: white;
-  display: flex;
-  border-top: 1px solid #e2e8f0;
-}
-
-nav button {
-  flex: 1;
-  background: none;
-  color: #64748b;
-  font-size: 14px;
-}
-
-nav button.active {
-  color: var(--blue);
-}
-
-/* Animation */
-@keyframes fade {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-</style>
+  <style>
+    body { font-family: 'Kanit', sans-serif; }
+    .page { display: none; }
+    .page.active { display: block; }
+    .btn { transition: all .2s ease; }
+    .btn:active { transform: scale(.95); }
+  </style>
 </head>
 
-<body><canvas id="profitChart"></canvas>
-<canvas id="carChart"></canvas>
+<body class="bg-slate-100 min-h-screen">
 
-<header>🚿 Wash Team</header>
-
-<!-- Pages -->
-<div id="daily" class="page active">
-  <div class="card">
-    <h3>บันทึกรายวัน</h3>
-    <label>จำนวนรถ</label>
-    <input type="number" placeholder="0">
-    <label>รายรับ</label>
-    <input type="number" placeholder="0">
-    <label>ต้นทุน</label>
-    <input type="number" placeholder="0">
-    <button>บันทึกข้อมูล</button>
+<!-- LOGIN -->
+<div id="loginPage" class="page active flex items-center justify-center min-h-screen">
+  <div class="bg-white p-6 rounded-2xl shadow w-full max-w-sm">
+    <h1 class="text-xl font-bold text-center mb-4">🚿 Wash Team Login</h1>
+    <input id="username" class="w-full p-3 border rounded-xl mb-3" placeholder="ชื่อผู้ใช้">
+    <input id="password" type="password" class="w-full p-3 border rounded-xl mb-4" placeholder="รหัสผ่าน">
+    <button onclick="login()" class="btn w-full bg-blue-600 text-white py-3 rounded-xl font-semibold">
+      เข้าสู่ระบบ
+    </button>
+    <p class="text-xs text-center text-slate-400 mt-3">
+      demo: admin / 1234
+    </p>
   </div>
 </div>
 
-<div id="summary" class="page">
-  <div class="card">
-    <h3>📊 สรุปสัปดาห์</h3>
-    <p>รถทั้งหมด: 0 คัน</p>
-    <p>กำไรสุทธิ: 0 บาท</p>
-    <button>📋 ก๊อปปี้ส่ง LINE</button>
-  </div>
-</div>
+<!-- APP -->
+<div id="app" class="page">
 
-<div id="dashboard" class="page">
-  <div class="card">
-    <h3>📈 Dashboard</h3>
-    <p>ภาพรวมธุรกิจ</p>
-  </div>
-</div>
+<header class="bg-slate-900 text-white p-4">
+  <h1 class="font-bold text-lg">WASH TEAM SYSTEM</h1>
+  <p class="text-xs text-blue-300">Dashboard ธุรกิจล้างรถ</p>
+</header>
 
-<!-- Bottom Navigation -->
-<nav>
-  <button class="active" onclick="go('daily', this)">รายวัน</button>
-  <button onclick="go('summary', this)">สรุป</button>
-  <button onclick="go('dashboard', this)">Dashboard</button>
+<nav class="flex text-sm bg-white border-b">
+  <button onclick="go('daily')" class="flex-1 py-3">รายวัน</button>
+  <button onclick="go('monthly')" class="flex-1 py-3">รายเดือน</button>
 </nav>
 
+<main class="p-4 max-w-md mx-auto space-y-4">
+
+<!-- DAILY -->
+<section id="daily" class="page active space-y-4">
+
+  <div class="bg-white p-4 rounded-xl shadow">
+    <h2 class="font-semibold mb-3">📅 บันทึกงานรายวัน</h2>
+
+    <input id="date" type="date" class="w-full p-3 border rounded-xl mb-3">
+
+    <input id="cars" type="number" placeholder="จำนวนรถ"
+      class="w-full p-3 border rounded-xl mb-3">
+
+    <input id="revenue" type="number" placeholder="รายรับ (บาท)"
+      class="w-full p-3 border rounded-xl mb-3">
+
+    <input id="cost" type="number" placeholder="ต้นทุน (บาท)"
+      class="w-full p-3 border rounded-xl mb-4">
+
+    <button onclick="saveDaily()" class="btn w-full bg-green-600 text-white py-3 rounded-xl">
+      💾 บันทึกข้อมูล
+    </button>
+  </div>
+
+</section>
+
+<!-- MONTHLY -->
+<section id="monthly" class="page space-y-4">
+
+  <div class="bg-white p-4 rounded-xl shadow">
+    <h2 class="font-semibold mb-3">📊 สรุปรายเดือน</h2>
+    <canvas id="monthChart"></canvas>
+  </div>
+
+  <div class="bg-white p-4 rounded-xl shadow space-y-2">
+    <h3 class="font-semibold">📋 สรุปยอด</h3>
+    <div id="summary"></div>
+
+    <button onclick="copySummary()"
+      class="btn w-full bg-blue-600 text-white py-3 rounded-xl mt-3">
+      📤 ก๊อปปี้ส่ง LINE
+    </button>
+  </div>
+
+</section>
+
+</main>
+</div>
+
 <script>
-function go(page, btn) {
+/* ---------- LOGIN ---------- */
+function login() {
+  const u = username.value;
+  const p = password.value;
+  if (u === "admin" && p === "1234") {
+    loginPage.classList.remove("active");
+    app.classList.add("active");
+    loadMonthly();
+  } else {
+    alert("ชื่อผู้ใช้หรือรหัสผ่านผิด");
+  }
+}
+
+/* ---------- NAV ---------- */
+function go(page) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.getElementById(page).classList.add('active');
-
-  document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
+  if (page === "monthly") loadMonthly();
 }
-</script>saveDailyData()
-loadCharts()
+
+/* ---------- SAVE DAILY ---------- */
+function saveDaily() {
+  if (!date.value) return alert("กรุณาเลือกวันที่");
+
+  const data = JSON.parse(localStorage.getItem("washData")) || [];
+
+  data.push({
+    date: date.value,
+    cars: +cars.value,
+    revenue: +revenue.value,
+    cost: +cost.value
+  });
+
+  localStorage.setItem("washData", JSON.stringify(data));
+  alert("บันทึกเรียบร้อย");
+  cars.value = revenue.value = cost.value = "";
+}
+
+/* ---------- MONTHLY SUMMARY ---------- */
+function loadMonthly() {
+  const data = JSON.parse(localStorage.getItem("washData")) || [];
+  const map = {};
+
+  data.forEach(d => {
+    const month = d.date.slice(0,7);
+    if (!map[month]) map[month] = { rev:0, cost:0 };
+    map[month].rev += d.revenue;
+    map[month].cost += d.cost;
+  });
+
+  const labels = Object.keys(map);
+  const profits = labels.map(m => map[m].rev - map[m].cost);
+
+  document.getElementById("summary").innerHTML =
+    labels.map(m => `
+      <div class="flex justify-between">
+        <span>${m}</span>
+        <span class="font-bold">${profits[labels.indexOf(m)].toLocaleString()} บ.</span>
+      </div>
+    `).join("");
+
+  new Chart(document.getElementById("monthChart"), {
+    type: "bar",
+    data: {
+      labels,
+      datasets: [{
+        label: "กำไร",
+        data: profits,
+        backgroundColor: "#3b82f6"
+      }]
+    },
+    options: {
+      animation: { duration: 1200 }
+    }
+  });
+}
+
+/* ---------- COPY LINE ---------- */
+function copySummary() {
+  const text = document.getElementById("summary").innerText;
+  navigator.clipboard.writeText("📊 สรุปรายเดือน\n" + text);
+  alert("คัดลอกแล้ว");
+}
+</script>
 
 </body>
 </html>

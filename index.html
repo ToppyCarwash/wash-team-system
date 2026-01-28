@@ -117,7 +117,8 @@ nav button.active {
 </style>
 </head>
 
-<body>
+<body><canvas id="profitChart"></canvas>
+<canvas id="carChart"></canvas>
 
 <header>🚿 Wash Team</header>
 
@@ -166,7 +167,8 @@ function go(page, btn) {
   document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
 }
-</script>
+</script>saveDailyData()
+loadCharts()
 
 </body>
 </html>

@@ -1,84 +1,171 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-  <meta charset="UTF-8" />
-  <title>Wash Team System</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wash Team App</title>
 
-  <style>
-    body {
-      font-family: sans-serif;
-      margin: 0;
-      background: #f4f6f8;
-    }
-    nav {
-      background: #0f172a;
-      color: white;
-      padding: 12px;
-      display: flex;
-      justify-content: space-around;
-    }
-    nav button {
-      background: none;
-      border: none;
-      color: white;
-      font-size: 16px;
-    }
-    .page {
-      display: none;
-      padding: 20px;
-    }
-    .page.active {
-      display: block;
-    }
-  </style>
+<!-- Google Font -->
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --blue: #2563eb;
+  --blue-light: #dbeafe;
+  --bg: #f1f5f9;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'Kanit', sans-serif;
+  background: linear-gradient(180deg, #eff6ff, #f8fafc);
+  min-height: 100vh;
+}
+
+/* Header */
+header {
+  background: var(--blue);
+  color: white;
+  padding: 18px;
+  text-align: center;
+  font-weight: 600;
+  font-size: 18px;
+  position: sticky;
+  top: 0;
+}
+
+/* Page */
+.page {
+  display: none;
+  padding: 20px;
+  animation: fade 0.3s ease;
+}
+
+.page.active {
+  display: block;
+}
+
+/* Card */
+.card {
+  background: white;
+  border-radius: 20px;
+  padding: 18px;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.1);
+  margin-bottom: 16px;
+}
+
+/* Input */
+input {
+  width: 100%;
+  padding: 14px;
+  border-radius: 14px;
+  border: 1px solid #cbd5f5;
+  margin-top: 6px;
+  font-size: 16px;
+}
+
+/* Button */
+button {
+  width: 100%;
+  padding: 14px;
+  border-radius: 16px;
+  border: none;
+  background: var(--blue);
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  margin-top: 12px;
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+
+button:active {
+  transform: scale(0.97);
+  box-shadow: 0 5px 15px rgba(37,99,235,0.4);
+}
+
+/* Bottom Nav */
+nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: white;
+  display: flex;
+  border-top: 1px solid #e2e8f0;
+}
+
+nav button {
+  flex: 1;
+  background: none;
+  color: #64748b;
+  font-size: 14px;
+}
+
+nav button.active {
+  color: var(--blue);
+}
+
+/* Animation */
+@keyframes fade {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+</style>
 </head>
 
 <body>
 
+<header>🚿 Wash Team</header>
+
+<!-- Pages -->
+<div id="daily" class="page active">
+  <div class="card">
+    <h3>บันทึกรายวัน</h3>
+    <label>จำนวนรถ</label>
+    <input type="number" placeholder="0">
+    <label>รายรับ</label>
+    <input type="number" placeholder="0">
+    <label>ต้นทุน</label>
+    <input type="number" placeholder="0">
+    <button>บันทึกข้อมูล</button>
+  </div>
+</div>
+
+<div id="summary" class="page">
+  <div class="card">
+    <h3>📊 สรุปสัปดาห์</h3>
+    <p>รถทั้งหมด: 0 คัน</p>
+    <p>กำไรสุทธิ: 0 บาท</p>
+    <button>📋 ก๊อปปี้ส่ง LINE</button>
+  </div>
+</div>
+
+<div id="dashboard" class="page">
+  <div class="card">
+    <h3>📈 Dashboard</h3>
+    <p>ภาพรวมธุรกิจ</p>
+  </div>
+</div>
+
+<!-- Bottom Navigation -->
 <nav>
-  <button onclick="go('daily')">📅 รายวัน</button>
-  <button onclick="go('summary')">📊 สรุป</button>
-  <button onclick="go('dashboard')">📈 Dashboard</button>
+  <button class="active" onclick="go('daily', this)">รายวัน</button>
+  <button onclick="go('summary', this)">สรุป</button>
+  <button onclick="go('dashboard', this)">Dashboard</button>
 </nav>
 
-<section id="daily" class="page">
-  <h2>บันทึกรายวัน</h2>
-  <p>ฟอร์มกรอกข้อมูลรายวัน</p>
-</section>
-
-<section id="summary" class="page">
-  <h2>สรุปสัปดาห์ / เดือน</h2>
-  <p>สรุปข้อมูลย้อนหลัง</p>
-</section>
-
-<section id="dashboard" class="page">
-  <h2>Dashboard</h2>
-  <p>ภาพรวมธุรกิจ</p>
-</section>
-
 <script>
-  function go(page) {
-    history.pushState({}, "", "/" + page);
-    show(page);
-  }
+function go(page, btn) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById(page).classList.add('active');
 
-  function show(page) {
-    document.querySelectorAll(".page")
-      .forEach(p => p.classList.remove("active"));
-    const el = document.getElementById(page);
-    if (el) el.classList.add("active");
-  }
-
-  window.addEventListener("load", () => {
-    const page = location.pathname.replace("/", "") || "daily";
-    show(page);
-  });
-
-  window.addEventListener("popstate", () => {
-    const page = location.pathname.replace("/", "") || "daily";
-    show(page);
-  });
+  document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
 </script>
 
 </body>
